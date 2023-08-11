@@ -2,7 +2,7 @@
 if [ "$UPDATE_IMAGE" = true ]; then 
     echo "Start build image: ${ENV_DOCKER_IMAGE_NAME}"
     # echo ${ENV_DOCKER_PASSWORD} | docker login -u ${ENV_DOCKER_LOGIN} --password-stdin;
-    ENV_DOCKER_REPO_TAG="$ENV_DOCKER_IMAGE_NAME.$DRONE_BUILD_NUMBER";
+    ENV_DOCKER_REPO_TAG="$ENV_DOCKER_IMAGE_NAME.$GITHUB_RUN_ID";
     ENV_DOCKER_REPO_TAG_LATEST="$ENV_DOCKER_IMAGE_NAME-latest";
     echo "Setting image tag: ${ENV_DOCKER_REPO_TAG}";
     docker build . -f $imageFolder/Dockerfile -t ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG_LATEST} -t ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG};
