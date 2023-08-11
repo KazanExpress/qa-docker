@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  ENV_DOCKER_REPO_NAME: ghcr.io/${{ github.repository }}
+  ENV_DOCKER_REPO_NAME: ghcr.io/kazanexpress/qa-docker
 
 jobs:
   build-publish-docker-images:
@@ -24,7 +24,6 @@ jobs:
     - name: script
       run: |
         echo "Job started at $(date '+%d/%m/%Y %H:%M:%S')";
-        echo "Docker repository is: $ENV_DOCKER_REPO_NAME"
         sudo apt update
         sudo apt install -y curl jq gettext
         ENV_DOCKER_PUSH_EXIST=false
