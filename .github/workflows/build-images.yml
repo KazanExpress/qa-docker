@@ -1,0 +1,64 @@
+name: Update Images
+
+on:
+  # schedule:
+  #   - cron:  '30 1 * * *'
+  workflow_dispatch:
+
+env:
+  ENV_DOCKER_REPO_NAME: ghcr.io/kazanexpress/qa-docker
+  ENV_DOCKER_LOGIN: amakarov70
+  ENV_DOCKER_PASSWORD: yyy
+
+    # username: ${{ github.actor }}
+    # password: ${{ secrets.GITHUB_TOKEN }}
+  ENV_DOCKER_IMAGES_PURGE: false
+
+jobs:
+  build-publish-docker-images:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: script
+      run: |
+        echo "Job started at $(date '+%d/%m/%Y %H:%M:%S')";
+        apt update
+        apt install -y curl jq gettext
+        ENV_DOCKER_PUSH_EXIST=false
+        for imageFolder in ./images/* ; 
+          do
+          if [ -d "$imageFolder" ]; then
+            ENV_DOCKER_IMAGE_NAME=$(basename $imageFolder); 
+            UPDATE_IMAGE=false;
+            source $imageFolder/.versions;
+            source $imageFolder/.check;
+            source $imageFolder/.build;
+          fi;
+        done
+        if [ "$ENV_DOCKER_PUSH_EXIST" = true ]; then 
+          echo "Pushing changes to repository...";
+          git commit -m"[skip ci] Commit new .versions file for image $imageFolder";
+          git push origin $DRONE_COMMIT_BRANCH;
+          echo "Done.";
+        fi
+  
+        if [ "$ENV_DOCKER_IMAGES_PURGE" = true ]; then 
+          echo "Purging local docker images";
+          ENV_TMP_PS=$(docker image ls --filter reference=$ENV_DOCKER_REPO_NAME --quiet);
+          if [ -z $ENV_TMP_PS ]; then 
+            echo "No images"; 
+          else
+            docker rmi $ENV_TMP_PS; 
+          fi;
+        else 
+            echo "Skip purge local docker images"; 
+        fi
+        echo "Job finished at $(date '+%d/%m/%Y %H:%M:%S'). Bye...";
