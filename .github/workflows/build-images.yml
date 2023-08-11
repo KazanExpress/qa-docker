@@ -6,8 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  ENV_DOCKER_REPO_NAME: ghcr.io/kazanexpress/qa-docker
-  ENV_DOCKER_IMAGES_PURGE: false
+  ENV_DOCKER_REPO_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
   build-publish-docker-images:
@@ -25,6 +24,7 @@ jobs:
     - name: script
       run: |
         echo "Job started at $(date '+%d/%m/%Y %H:%M:%S')";
+        echo "Docker repository is: $ENV_DOCKER_REPO_NAME"
         sudo apt update
         sudo apt install -y curl jq gettext
         ENV_DOCKER_PUSH_EXIST=false
@@ -43,19 +43,8 @@ jobs:
           git config user.name 'Machine User';
           git config user.email 'ghmachine@kazanexpress.ru';
           git commit -m"Commit new .versions file for image $imageFolder [skip ci]";
-          push origin HEAD:master;
+          git push origin HEAD:master;
           echo "Done.";
         fi
-  
-        if [ "$ENV_DOCKER_IMAGES_PURGE" = true ]; then 
-          echo "Purging local docker images";
-          ENV_TMP_PS=$(docker image ls --filter reference=$ENV_DOCKER_REPO_NAME --quiet);
-          if [ -z $ENV_TMP_PS ]; then 
-            echo "No images"; 
-          else
-            docker rmi $ENV_TMP_PS; 
-          fi;
-        else 
-            echo "Skip purge local docker images"; 
-        fi
+
         echo "Job finished at $(date '+%d/%m/%Y %H:%M:%S'). Bye...";
