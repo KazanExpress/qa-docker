@@ -7,11 +7,6 @@ on:
 
 env:
   ENV_DOCKER_REPO_NAME: ghcr.io/kazanexpress/qa-docker
-  ENV_DOCKER_LOGIN: amakarov70
-  ENV_DOCKER_PASSWORD: yyy
-
-    # username: ${{ github.actor }}
-    # password: ${{ secrets.GITHUB_TOKEN }}
   ENV_DOCKER_IMAGES_PURGE: false
 
 jobs:
@@ -45,8 +40,10 @@ jobs:
         done
         if [ "$ENV_DOCKER_PUSH_EXIST" = true ]; then 
           echo "Pushing changes to repository...";
-          git commit -m"[skip ci] Commit new .versions file for image $imageFolder";
-          git push origin $DRONE_COMMIT_BRANCH;
+          git config user.name 'Machine User';
+          git config user.email 'ghmachine@kazanexpress.ru';
+          git commit -m"Commit new .versions file for image $imageFolder [skip ci]";
+          push origin HEAD:master;
           echo "Done.";
         fi
   
