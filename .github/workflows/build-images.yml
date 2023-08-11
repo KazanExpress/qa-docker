@@ -30,8 +30,8 @@ jobs:
     - name: script
       run: |
         echo "Job started at $(date '+%d/%m/%Y %H:%M:%S')";
-        apt update
-        apt install -y curl jq gettext
+        sudo apt update
+        sudo apt install -y curl jq gettext
         ENV_DOCKER_PUSH_EXIST=false
         for imageFolder in ./images/* ; 
           do
