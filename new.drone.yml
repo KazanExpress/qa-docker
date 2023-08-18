@@ -4,8 +4,8 @@ name: default
 
 trigger:
   event:
-  - custom
   - cron
+  - custom
   cron:
   - daily
 
