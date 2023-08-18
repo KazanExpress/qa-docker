@@ -9,6 +9,8 @@ trigger:
     - custom
   cron:
   - masterhourly
+  branch: 
+  - master
 
 volumes:
  - name: docker
