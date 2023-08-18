@@ -4,11 +4,13 @@ name: default
 
 trigger:
   event:
-    include:
-    - push
-    - custom
+  - push
+  - custom
+  - cron
   branch: 
   - master
+  cron:
+  - masterhourly
 
 volumes:
  - name: docker
