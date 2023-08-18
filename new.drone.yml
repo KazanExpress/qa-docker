@@ -1,0 +1,72 @@
+kind: pipeline
+type: docker
+name: default
+
+trigger:
+  event:
+  - custom
+  - cron
+  cron: 
+  - daily
+
+volumes:
+ - name: docker
+   host:
+     path: /var/run/docker.sock
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: Build Image
+  image: plugins/docker
+
+  environment:
+    ENV_DOCKER_REGISTRY_NAME: ghcr.io
+    ENV_DOCKER_REPO_NAME: ghcr.io/kazanexpress/qa-docker
+    ENV_DOCKER_LOGIN:
+      from_secret: github-user
+    ENV_DOCKER_PASSWORD:
+      from_secret: github-user-token
+    ENV_DOCKER_IMAGES_PURGE: false
+
+  commands:
+    - echo "Job started at $(date '+%d/%m/%Y %H:%M:%S')";
+    - apk update
+    - apk add curl jq git gettext
+    - ENV_DOCKER_PUSH_EXIST=false
+    - for imageFolder in ./images/* ; 
+        do
+        if [ -d "$imageFolder" ]; then
+          ENV_DOCKER_IMAGE_NAME=$(basename $imageFolder); 
+          UPDATE_IMAGE=false;
+          source $imageFolder/.versions;
+          source $imageFolder/.check;
+          source $imageFolder/.build;
+        fi;
+      done
+    - if [ "$ENV_DOCKER_PUSH_EXIST" = true ]; then 
+        echo "Pushing changes to repository...";
+        git commit -m"[skip ci] Commit new .versions file for image $imageFolder";
+        git push origin $DRONE_COMMIT_BRANCH;
+        echo "Done.";
+      fi
+
+    - echo "repo=$ENV_DOCKER_REPO_NAME";
+
+    - if [ "$ENV_DOCKER_IMAGES_PURGE" = true ]; then 
+        echo "Purging local docker images";
+        ENV_TMP_PS=$(docker image ls --filter reference=$ENV_DOCKER_REPO_NAME --quiet);
+        if [ -z $ENV_TMP_PS ]; then 
+          echo "No images"; 
+        else
+          docker rmi $ENV_TMP_PS; 
+        fi;
+      else 
+          echo "Skip purge local docker images"; 
+      fi
+    - echo "Job finished at $(date '+%d/%m/%Y %H:%M:%S'). Bye...";
+  volumes:
+    - name: docker
+      path: /var/run/docker.sock
