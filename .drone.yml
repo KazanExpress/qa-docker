@@ -5,7 +5,6 @@ name: default
 trigger:
   event:
   - push
-  - custom
   - cron
   branch: 
   - master
