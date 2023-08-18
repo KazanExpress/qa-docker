@@ -1,8 +1,6 @@
 name: Update Images
 
 on:
-  schedule:
-    - cron: '00 10 * * 1,2,3,4,5'
   workflow_dispatch:
 
 env:
@@ -41,7 +39,7 @@ jobs:
           echo "Pushing changes to repository...";
           git config user.name 'Machine User';
           git config user.email 'ghmachine@kazanexpress.ru';
-          git commit -m"Commit new .versions file for image $imageFolder [skip ci]";
+          git commit -m"Commit new .versions file [skip ci]";
           git push origin HEAD:master;
           echo "Done.";
         fi
