@@ -51,7 +51,7 @@ steps:
         git config user.name 'Machine User';
         git config user.email 'ghmachine@kazanexpress.ru';
         git commit -m"Commit new .versions file [skip ci]";
-        git push origin $DRONE_COMMIT_BRANCH;
+        git push origin HEAD:master;
         echo "Done.";
       fi
 
