@@ -4,7 +4,7 @@ name: default
 
 trigger:
   event:
-  - сustom
+  - custom
 
 volumes:
  - name: docker
