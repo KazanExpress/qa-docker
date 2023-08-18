@@ -7,7 +7,7 @@ trigger:
   - cron
   - custom
   cron:
-  - daily
+  - masterhourly
 
 volumes:
  - name: docker
