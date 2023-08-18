@@ -4,8 +4,9 @@ name: default
 
 trigger:
   event:
-  - cron
-  - custom
+    include:
+    - cron
+    - custom
   cron:
   - masterhourly
 
