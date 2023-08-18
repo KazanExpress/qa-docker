@@ -48,7 +48,7 @@ steps:
       done
     - if [ "$ENV_DOCKER_PUSH_EXIST" = true ]; then 
         echo "Pushing changes to repository...";
-        git commit -m"[skip ci] Commit new .versions file for image $imageFolder";
+        git commit -m"Commit new .versions file [skip ci]";
         git push origin $DRONE_COMMIT_BRANCH;
         echo "Done.";
       fi
