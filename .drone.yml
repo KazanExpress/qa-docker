@@ -46,7 +46,7 @@ steps:
     - if [ "$ENV_DOCKER_PUSH_EXIST" = true ]; then 
         echo "Pushing changes to repository...";
         git commit -m"Commit new .versions file [skip ci]";
-        git push origin HEAD:master;
+        git push origin master;
         echo "Done.";
       fi
 
