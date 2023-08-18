@@ -5,7 +5,9 @@ name: default
 trigger:
   event:
     include:
-    - custom
+    - cron
+  cron:
+  - masterhourly
 
 volumes:
  - name: docker
