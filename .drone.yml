@@ -5,10 +5,8 @@ name: default
 trigger:
   event:
     include:
-    - cron
+    - push
     - custom
-  cron:
-  - masterhourly
   branch: 
   - master
 
