@@ -5,9 +5,6 @@ name: default
 trigger:
   event:
   - custom
-  - cron
-  cron: 
-  - daily
 
 volumes:
  - name: docker
