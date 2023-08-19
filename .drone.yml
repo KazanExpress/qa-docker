@@ -52,9 +52,9 @@ steps:
 
     - if [ "$ENV_DOCKER_PUSH_EXIST" = true ]; then 
         echo "Pushing changes to repository...";
-        git config --global user.name 'Machine User'
-        git config --global user.email 'ghmachine@kazanexpress.ru'
-        git remote set-url origin "https://$ENV_GITGHUB_LOGIN:$ENV_GITHUB_PASSWORD@github.com/${DRONE_REPO}"
+        git config --global user.name 'Machine User';
+        git config --global user.email 'ghmachine@kazanexpress.ru';
+        git remote set-url origin "https://$ENV_GITGHUB_LOGIN:$ENV_GITHUB_PASSWORD@github.com/${DRONE_REPO}";
         git commit -m"Commit new .versions file [skip ci]";
         git push origin master;
         echo "Done.";
