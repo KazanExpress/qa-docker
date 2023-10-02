@@ -40,7 +40,7 @@ steps:
     - for imageFolder in ./images/* ; 
         do
         if [ -d "$imageFolder" ]; then
-          if [ ! -f "imageFolder/.skip" ]; then
+          if [ ! -f "$imageFolder/.skip" ]; then
             ENV_DOCKER_IMAGE_NAME=$(basename $imageFolder); 
             UPDATE_IMAGE=false;
             source $imageFolder/.versions;
