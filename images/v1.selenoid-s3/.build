@@ -1,0 +1,18 @@
+# Build and Push image
+if [ "$UPDATE_IMAGE" = true ]; then 
+    echo "Start build image: ${ENV_DOCKER_IMAGE_NAME}"
+    echo ${ENV_DOCKER_PASSWORD} | docker login ${ENV_DOCKER_REGISTRY_NAME} -u ${ENV_DOCKER_LOGIN} --password-stdin;
+    ENV_DOCKER_REPO_TAG="$ENV_DOCKER_IMAGE_NAME.$LATEST_SELENOID_VERSION";
+    ENV_DOCKER_REPO_TAG_LATEST="$ENV_DOCKER_IMAGE_NAME.latest";
+    echo "Setting image tag: ${ENV_DOCKER_REPO_TAG}";
+    docker build . -f $imageFolder/Dockerfile -t ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG_LATEST} -t ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG};
+    docker push ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG_LATEST};
+    docker push ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG};
+
+    cp  $imageFolder/.newVersions $imageFolder/.versions;
+
+    echo "Changes commiting for image: ${ENV_DOCKER_IMAGE_NAME}"
+    git add $imageFolder/.versions;
+    # git commit -m"[skip ci] Commit new .versions file for image $imageFolder";
+    ENV_DOCKER_PUSH_EXIST=true;
+fi 
