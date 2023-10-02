@@ -40,11 +40,15 @@ steps:
     - for imageFolder in ./images/* ; 
         do
         if [ -d "$imageFolder" ]; then
-          ENV_DOCKER_IMAGE_NAME=$(basename $imageFolder); 
-          UPDATE_IMAGE=false;
-          source $imageFolder/.versions;
-          source $imageFolder/.check;
-          source $imageFolder/.build;
+          if [ ! -f "$imageFolder/.skip" ]; then
+            ENV_DOCKER_IMAGE_NAME=$(basename $imageFolder); 
+            UPDATE_IMAGE=false;
+            source $imageFolder/.versions;
+            source $imageFolder/.check;
+            source $imageFolder/.build;
+          else
+            echo "Skip image folder $imageFolder (found .skip file in folder)";
+          fi;
         fi;
       done
 
