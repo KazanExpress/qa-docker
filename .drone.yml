@@ -47,7 +47,7 @@ steps:
             source $imageFolder/.check;
             source $imageFolder/.build;
           else
-            echo "Skip image folder $imageFolder (exis .skip file)";
+            echo "Skip image folder $imageFolder (found .skip file in folder)";
           fi;
         fi;
       done
