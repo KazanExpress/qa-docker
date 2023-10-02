@@ -1,3 +1,4 @@
+# ----- GitHub build DEPRECATED! Use Drone build --------
 name: Update Images
 
 on:
