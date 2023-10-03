@@ -1,0 +1,19 @@
+UPDATE_IMAGE=false;
+echo "Start version checking for image: $ENV_DOCKER_IMAGE_NAME"
+
+echo " - Current Selenoid version is $SELENOID_VERSION"
+export LATEST_SELENOID_VERSION=$(curl -s "https://api.github.com/repos/aerokube/selenoid/tags" | jq -r '.[].name | select(test("^\\d.*"))' | head -n 1 | sed 's/"//g')
+echo " - Latest Selenoid version is $LATEST_SELENOID_VERSION"
+if [ "$SELENOID_VERSION" = "$LATEST_SELENOID_VERSION" ]; then 
+    echo " - Selenoid versions equal"; 
+else 
+    echo " + Selenoid versions are not equal"; 
+    UPDATE_IMAGE=true;  
+fi
+
+if [ "$UPDATE_IMAGE" = true ]; then 
+    echo "SELENOID_VERSION=$LATEST_SELENOID_VERSION" >> $imageFolder/.newVersions;
+
+    echo "Creating Dockerfile for image: $ENV_DOCKER_IMAGE_NAME"
+    envsubst '$LATEST_SELENOID_VERSION' < $imageFolder/Dockerfile.env > $imageFolder/Dockerfile;
+fi
