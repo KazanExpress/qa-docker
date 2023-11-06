@@ -16,10 +16,10 @@ if [ "$UPDATE_IMAGE" = true ]; then
 
     ENV_DOCKER_REPO_TAG="$ENV_DOCKER_IMAGE_NAME.$YANDEX_BROWSER_TAG";
     echo "$ENV_DOCKER_REPO_NAME:$ENV_DOCKER_REPO_TAG";
-
-    ./images yandex -b 23.9.1.1077-1 -d 23.9.1-stable -t "$ENV_DOCKER_REPO_NAME:$ENV_DOCKER_REPO_TAG"
     echo ${ENV_DOCKER_PASSWORD} | docker login ${ENV_DOCKER_REGISTRY_NAME} -u ${ENV_DOCKER_LOGIN} --password-stdin;
-    echo "docker push ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG};"
+
+    ./images yandex -b "$YANDEX_BROWSER_VERSION" -d "$YANDEX_WEB_DRIVER_VERSION" -t "$ENV_DOCKER_REPO_NAME:$ENV_DOCKER_REPO_TAG" --push
+
     cd ../..;
     rm -rf yandex;
 fi 
