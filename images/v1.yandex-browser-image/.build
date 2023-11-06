@@ -6,6 +6,7 @@ if [ "$UPDATE_IMAGE" = true ]; then
     export PATH=$PATH:/usr/local/go/bin;
     go version;
     mkdir yandex;
+    cd yandex;
     git clone https://github.com/aerokube/images;
     cd images;
     go install github.com/markbates/pkger/cmd/pkger@latest;
