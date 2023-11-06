@@ -13,6 +13,7 @@ if [ "$UPDATE_IMAGE" = true ]; then
     go install github.com/markbates/pkger/cmd/pkger@latest;
     go generate github.com/aerokube/images;
     go build;
+    echo "$ENV_DOCKER_IMAGE_NAME:$YANDEX_BROWSER_TAG";
     ./images yandex -b 23.9.1.1077-1 -d 23.9.1-stable -t "$ENV_DOCKER_IMAGE_NAME:$YANDEX_BROWSER_TAG"
 
     echo "Start build image: ${ENV_DOCKER_IMAGE_NAME}"
