@@ -1,0 +1,22 @@
+# Build and Push image
+if [ "$UPDATE_IMAGE" = true ]; then 
+
+    curl -L https://go.dev/dl/go1.21.3.linux-amd64.tar.gz --output go1.21.3.linux-amd64.tar.gz;
+    rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.3.linux-amd64.tar.gz;
+    export PATH=$PATH:/usr/local/go/bin;
+    go version;
+    git clone https://github.com/aerokube/images;
+    cd images;
+    go install github.com/markbates/pkger/cmd/pkger@latest;
+    go generate github.com/aerokube/images;
+    go build;
+    ./images yandex -b 23.9.1.1077-1 -d 23.9.1-stable -t "$ENV_DOCKER_IMAGE_NAME:$YANDEX_BROWSER_TAG"
+
+    echo "Start build image: ${ENV_DOCKER_IMAGE_NAME}"
+    echo ${ENV_DOCKER_PASSWORD} | docker login ${ENV_DOCKER_REGISTRY_NAME} -u ${ENV_DOCKER_LOGIN} --password-stdin;
+    # ENV_DOCKER_REPO_TAG="$ENV_DOCKER_IMAGE_NAME.$LATEST_SELENOID_VERSION";
+    # ENV_DOCKER_REPO_TAG_LATEST="$ENV_DOCKER_IMAGE_NAME.latest";
+    # echo "Setting image tag: ${ENV_DOCKER_REPO_TAG}";
+    # docker build . -f $imageFolder/Dockerfile -t ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG_LATEST} -t ${ENV_DOCKER_REPO_NAME}:${ENV_DOCKER_REPO_TAG};
+    docker push ${ENV_DOCKER_REPO_NAME}:${YANDEX_BROWSER_TAG};
+fi 
