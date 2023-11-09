@@ -15,5 +15,5 @@ To create an image with a new tag, you need to make a folder in images and put t
 
 Generation algorithm .github/workfolws/build-images.yaml
 
-# In branch "cron" added cron to start builds every day
+## In branch "cron" added cron to start builds every day
 
