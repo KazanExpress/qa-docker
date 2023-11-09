@@ -18,8 +18,16 @@ if [ "$UPDATE_IMAGE" = true ]; then
     echo "$ENV_DOCKER_REPO_NAME:$ENV_DOCKER_REPO_TAG";
     echo ${ENV_DOCKER_PASSWORD} | docker login ${ENV_DOCKER_REGISTRY_NAME} -u ${ENV_DOCKER_LOGIN} --password-stdin;
 
-    ./images yandex -b "$YANDEX_BROWSER_VERSION" -d "$YANDEX_WEB_DRIVER_VERSION" -t "$ENV_DOCKER_REPO_NAME:$ENV_DOCKER_REPO_TAG" --push
+    ./images yandex -b "$LATEST_YANDEX_BROWSER_VERSION" -d "$YANDEX_WEB_DRIVER_VERSION" -t "$ENV_DOCKER_REPO_NAME:$ENV_DOCKER_REPO_TAG" --push
 
     cd ../..;
     rm -rf yandex;
+
+
+    cp  $imageFolder/.newVersions $imageFolder/.versions;
+
+    echo "Changes commiting for image: ${ENV_DOCKER_IMAGE_NAME}"
+    git add $imageFolder/.versions;
+    # git commit -m"[skip ci] Commit new .versions file for image $imageFolder";
+    ENV_DOCKER_PUSH_EXIST=true;
 fi 
