@@ -7,9 +7,8 @@ curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64
 echo -1-----
 
 while IFS= read -r line
-echo -1-1----
 do
-    echo -1-2----
+    echo $line;
     if [ "$line" = "Package: yandex-browser-stable" ]; then stable="true"; fi
     if [[ $line = Version:* ]] && [ "$stable" = "true" ]; then 
         last_version="${line##* }";
