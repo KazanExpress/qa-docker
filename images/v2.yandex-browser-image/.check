@@ -1,16 +1,14 @@
 UPDATE_IMAGE=false;
 
-stable="false"
-curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64/Packages > packages
+stable="false";
 while IFS= read -r line
 do
     if [ "$line" = "Package: yandex-browser-stable" ]; then stable="true"; fi
     if [[ $line = Version:* ]] && [ "$stable" = "true" ]; then 
-        last_version="${line##* }"
-        stable="false"
+        last_version="${line##* }";
+        stable="false";
     fi
-done < packages
-rm packages
+done <<< "$(curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64/Packages )";
 
 if [ $last_version ]; then 
 
@@ -19,21 +17,21 @@ if [ $last_version ]; then
     else
         echo "New version Yandex Browser found: $last_version"; 
 
-        wdversion=$(echo "$last_version" | cut -d "." -f 1-3  )
-        browser_tag="$wdversion"
-        wdversion="v$(echo "$wdversion" | sed 's/\./\\./g').*"
+        wdversion=$(echo "$last_version" | cut -d "." -f 1-3  );
+        browser_tag="$wdversion";
+        wdversion="v$(echo "$wdversion" | sed 's/\./\\./g').*";
         wdversion=$(curl -s "https://api.github.com/repos/yandex/YandexDriver/tags" | \
-            jq --arg keyvar "$wdversion" -r '.[].name | select(test([$keyvar]))' | head -n 1 | sed 's/v//g')
+            jq --arg keyvar "$wdversion" -r '.[].name | select(test([$keyvar]))' | head -n 1 | sed 's/v//g');
         if [ $wdversion ]; then 
                 
-            echo "Found WebDriver version  $wdversion for Browser version $last_version. "
-            export YANDEX_WEB_DRIVER_VERSION="$wdversion"
-            export LATEST_YANDEX_BROWSER_VERSION="$last_version"
-            export YANDEX_BROWSER_TAG="$browser_tag"
-            UPDATE_IMAGE=true;
-            echo "Try building image."
+            echo "Found WebDriver version  $wdversion for Browser version $last_version. ";
+            export YANDEX_WEB_DRIVER_VERSION="$wdversion";
+            export LATEST_YANDEX_BROWSER_VERSION="$last_version";
+            export YANDEX_BROWSER_TAG="$browser_tag";
+            UPDATE_IMAGE=true;;
+            echo "Try building image.";
         else 
-            echo "WebDriver for Browser version $last_version not found. Skip building image."
+            echo "WebDriver for Browser version $last_version not found. Skip building image.";
         fi
         # echo ------------
         # echo "$LATEST_YANDEX_BROWSER_VERSION"
