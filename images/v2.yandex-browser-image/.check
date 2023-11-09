@@ -1,10 +1,7 @@
 UPDATE_IMAGE=false;
 
 stable="false";
-curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64/Packages > packages
-
-cat packages 
-
+curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64/Packages > packages;
 while IFS= read -r line;
 do
     if [ "$line" = "Package: yandex-browser-stable" ]; then stable="true"; fi ;
@@ -13,7 +10,7 @@ do
         stable="false";
     fi;
 done < packages;
-rm packages; 
+rm packages;
 
 if [ $last_version ]; then 
 
@@ -33,7 +30,7 @@ if [ $last_version ]; then
             export YANDEX_WEB_DRIVER_VERSION="$wdversion";
             export LATEST_YANDEX_BROWSER_VERSION="$last_version";
             export YANDEX_BROWSER_TAG="$browser_tag";
-            UPDATE_IMAGE=true;;
+            UPDATE_IMAGE=true;
             echo "Try building image.";
         else 
             echo "WebDriver for Browser version $last_version not found. Skip building image.";
