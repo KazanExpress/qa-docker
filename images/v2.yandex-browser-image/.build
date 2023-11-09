@@ -1,0 +1,25 @@
+# Build and Push image
+if [ "$UPDATE_IMAGE" = true ]; then 
+
+    curl -L https://go.dev/dl/go1.21.3.linux-amd64.tar.gz --output go1.21.3.linux-amd64.tar.gz;
+    rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.3.linux-amd64.tar.gz;
+    PATH=$PATH:/usr/local/go/bin;
+    PATH=$PATH:~/go/bin;
+    go version;
+    mkdir yandex;
+    cd yandex;
+    git clone https://github.com/aerokube/images;
+    cd images;
+    go install github.com/markbates/pkger/cmd/pkger@latest;
+    go generate github.com/aerokube/images;
+    go build;
+
+    ENV_DOCKER_REPO_TAG="$ENV_DOCKER_IMAGE_NAME.$YANDEX_BROWSER_TAG";
+    echo "$ENV_DOCKER_REPO_NAME:$ENV_DOCKER_REPO_TAG";
+    echo ${ENV_DOCKER_PASSWORD} | docker login ${ENV_DOCKER_REGISTRY_NAME} -u ${ENV_DOCKER_LOGIN} --password-stdin;
+
+    ./images yandex -b "$YANDEX_BROWSER_VERSION" -d "$YANDEX_WEB_DRIVER_VERSION" -t "$ENV_DOCKER_REPO_NAME:$ENV_DOCKER_REPO_TAG" --push
+
+    cd ../..;
+    rm -rf yandex;
+fi 
