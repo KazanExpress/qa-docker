@@ -8,7 +8,7 @@ do
         last_version="${line##* }"
         stable="false"
     fi
-done <<< "$(curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64/Packages )"
+done < "$(curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64/Packages )"
 
 if [ $last_version ]; then 
 
