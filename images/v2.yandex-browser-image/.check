@@ -8,12 +8,11 @@ echo -1-----
 
 while IFS= read -r line
 do
-    echo $line;
-    if [ "$line" = "Package: yandex-browser-stable" ]; then stable="true"; fi
-    if [[ $line = Version:* ]] && [ "$stable" = "true" ]; then 
-        last_version="${line##* }";
-        stable="false";
-    fi
+    if [ "$line" = "Package: yandex-browser-stable" ]; then stable="true"; echo $line; fi
+    # if [[ $line = Version:* ]] && [ "$stable" = "true" ]; then 
+    #     last_version="${line##* }";
+    #     stable="false";
+    # fi
 done < packages;
 echo -2-----
 
