@@ -1,6 +1,7 @@
 UPDATE_IMAGE=false;
 
 stable="false"
+curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64/Packages > packages
 while IFS= read -r line
 do
     if [ "$line" = "Package: yandex-browser-stable" ]; then stable="true"; fi
@@ -8,7 +9,8 @@ do
         last_version="${line##* }"
         stable="false"
     fi
-done < "$(curl -s https://repo.yandex.ru/yandex-browser/deb/dists/stable/main/binary-amd64/Packages )"
+done < packages
+rm packages
 
 if [ $last_version ]; then 
 
