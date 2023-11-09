@@ -4,7 +4,9 @@ name: default
 
 trigger:
   event:
-  - custom
+  - cron
+  cron:
+  - workhours
 
 volumes:
  - name: docker
@@ -60,7 +62,7 @@ steps:
         git config --global user.email 'ghmachine@kazanexpress.ru';
         git remote set-url origin "https://$ENV_GITGHUB_LOGIN:$ENV_GITHUB_PASSWORD@github.com/${DRONE_REPO}";
         git commit -m"Commit new .versions file [skip ci]";
-        git push origin master;
+        git push origin cron;
         echo "Done.";
       fi
 
