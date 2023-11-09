@@ -15,7 +15,7 @@ do
         last_version="${line#* }";
         stable=false;
     fi
-done < packagess
+done < packages;
 
 rm packages;
 
