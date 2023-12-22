@@ -1,0 +1,18 @@
+UPDATE_IMAGE=false;
+echo "Start version checking for image: $ENV_DOCKER_IMAGE_NAME"
+echo " - Current Runner version is $RUNNER_VERSION"
+export LATEST_RUNNER_VERSION=$(curl -s "https://hub.docker.com/v2/repositories/summerwind/actions-runner-dind/tags/?page_size=50&ordering=last_updated" | jq '.results[].name | select(test("^v2.*22.04$"))' |  head -n 1 | sed 's/"//g')
+echo " - Latest Runner versionis $LATEST_RUNNER_VERSION"
+if [ "$RUNNER_VERSION" = "$LATEST_RUNNER_VERSION" ]; then 
+    echo " - Runner versions equal"; 
+else 
+    echo " + Runner versions are not equal"; 
+    UPDATE_IMAGE=true; 
+fi
+
+if [ "$UPDATE_IMAGE" = true ]; then 
+    echo "RUNNER_VERSION=$LATEST_RUNNER_VERSION" > $imageFolder/.newVersions;
+
+    echo "Creating Dockerfile for image: $ENV_DOCKER_IMAGE_NAME"
+    envsubst '$LATEST_RUNNER_VERSION, $LATEST_ALLURECTL_VERSION, $LATEST_CHROME_VERSION' < $imageFolder/Dockerfile.env > $imageFolder/Dockerfile;
+fi
